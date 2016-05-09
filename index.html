@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html lang="en" dir="ltr">
+<head>
+<title>I+D+i</title>
+<meta charset="iso-8859-1">
+<style>
+path {
+    stroke: red;
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    stroke-width: 2;
+    shape-rendering: crispEdges;
+}
+    #graphs{
+        font: 12px Arial;
+    }
+</style>
+<link rel="stylesheet" href="styles/layout.css" type="text/css">
+<!--[if lt IE 9]><script src="scripts/html5shiv.js"></script><![endif]-->
+</head>
+<body>
+<div class="wrapper row1">
+  <header id="header" class="clear">
+<script src="d3.min.js"></script>
+<script src="topojson.min.js"></script>
+
+    <script src="datamaps.world.min.js"></script>
+    <div id="hgroup">
+      <h1><a href="#">Indicadores de desarrollo en I+D+I</a></h1>
+      <h2>Iván Granda Arillo</h2>
+    </div>
+    
+  </header>
+</div>
+<!-- content -->
+<div class="wrapper row2">
+  <div id="container" class="clear">
+    <!-- Slider -->
+    <section id="slider">
+    <script>
+    var country = 'ESP';
+    var country_2='';
+        var default_fill='#fff7b7';
+        var map = new Datamap({
+            scope:'world',
+            projection:'mercator',
+            element: document.getElementById('slider'),
+            fills: {
+                defaultFill: default_fill
+            },
+            geographyConfig:{
+                highlightOnHover: false,
+                popupOnHover: true,
+                borderColor: '#000000'
+            },
+            done: function(datamap){
+                datamap.svg.call(d3.behavior.zoom()
+                	.scaleExtent([0.7, 5])
+                	.on("zoom", redraw));
+
+                function redraw() {
+ 
+                    datamap.svg.selectAll("g")
+                    .attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+                }
+                datamap.svg.selectAll('.datamaps-subunit').on("contextmenu", function (geography) {
+                    var m = {};
+                    d3.event.preventDefault();
+                    if (country_2==geography.id) {
+                        m[country_2]= default_fill;
+                        datamap.updateChoropleth(m,{reset:false});
+                        country_2 = '';
+                    }
+                    else{
+                        m[geography.id] = 'green';
+                        m[country_2]= default_fill;
+                        datamap.updateChoropleth(m,{reset:false});
+                        country_2=geography.id;}
+
+                });
+                datamap.svg.selectAll('.datamaps-subunit').on('click',function(geography){
+                    var m={};
+                    m[country]= default_fill;
+                    m[geography.id] = 'red';
+
+                    datamap.updateChoropleth(m,{reset:false});
+                    country=geography.id;
+                    update();
+                });
+            }
+        });
+        map.graticule();
+        </script>
+   </section>
+   <p>Hola ho</p>
+    <!-- main content -->
+    <div id="homepage">
+      <!-- Services -->
+      <section id="services" class="clear">
+        <article class="one_third" >
+          <figure id="PIB_graph"><!--img src="images/demo/290x180.gif" width="290" height="180" alt=""-->
+          <script>
+    var data_PIB;
+    var data_inv;
+    var country='ESP';
+    var country_2='';
+    m={};
+    m[country]='red';
+    map.updateChoropleth(m);
+    // Set the dimensions of the canvas / graph
+    var margin = {top: 30, right: 20, bottom: 50, left: 70},
+    width = 310 - margin.left - margin.right,
+    height = 180 - margin.top - margin.bottom;
+
+    // Set the ranges
+    var x = d3.scale.linear().range([0, width]);
+    var y = d3.scale.linear().range([height, 0]);
+
+    var xAxis = d3.svg.axis().scale(x)
+        .orient("bottom").ticks(10);
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left").ticks(8);
+
+    var valueline = d3.svg.line()
+        .x(function(d) { return x(d['']); })
+        .y(function(d) { return y(d[country]); });
+
+    // Gráfico de PIB
+    d3.csv('datos/PIB_mundial_adapt.csv', function(d) {
+        data_PIB=d;
+
+
+        x.domain(d3.extent(data_PIB,function(d){return +d['']}));
+        y.domain(d3.extent(data_PIB,function(d){return +d['ESP']}));
+
+        // Adds the svg canvas
+        var PIB_graph = d3.select("#PIB_graph")
+            .append("svg")
+            .attr("x",0)
+            .attr("y",0)
+            .attr("id","PIB_graph")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        PIB_graph.append("path")
+            .attr("class","line")
+            .attr("d",valueline(d))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)})
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)});
+
+
+        // Add the X Axis
+        PIB_graph.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+        // Add the Y Axis
+       PIB_graph.append("g")
+            .attr("class", "y axis")
+            .call(yAxis);
+
+        PIB_graph.append("text")
+            .attr("y", -margin.top/2)
+            .attr("x", 0)
+            .attr("dy",".75em")
+            //.attr("transform","translate(width/2)")
+            .text("PIB (Millones de US$)")    });
+            </script>
+            <figcaption>
+              <h2>PIB</h2>
+              <p>El PIB es uno de los mayores indicadores.</p>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="one_third">
+          <figure><img src="images/demo/290x180.gif" width="290" height="180" alt="">
+            <figcaption>
+              <h2>Indonectetus facilis</h2>
+              <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+              <footer class="more"><a href="#">Read More &raquo;</a></footer>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="one_third lastbox">
+          <figure><img src="images/demo/290x180.gif" width="290" height="180" alt="">
+            <figcaption>
+              <h2>Indonectetus facilis</h2>
+              <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+              <footer class="more"><a href="#">Read More &raquo;</a></footer>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="one_third">
+          <figure><img src="images/demo/290x180.gif" width="290" height="180" alt="">
+            <figcaption>
+              <h2>Indonectetus facilis</h2>
+              <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+              <footer class="more"><a href="#">Read More &raquo;</a></footer>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="one_third">
+          <figure><img src="images/demo/290x180.gif" width="290" height="180" alt="">
+            <figcaption>
+              <h2>Indonectetus facilis</h2>
+              <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+              <footer class="more"><a href="#">Read More &raquo;</a></footer>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="one_third lastbox">
+          <figure><img src="images/demo/290x180.gif" width="290" height="180" alt="">
+            <figcaption>
+              <h2>Indonectetus facilis</h2>
+              <p>Nullamlacus dui ipsum conseque loborttis non euisque morbi penas dapibulum orna.</p>
+              <footer class="more"><a href="#">Read More &raquo;</a></footer>
+            </figcaption>
+          </figure>
+        </article>
+      </section>
+      <!-- / Services -->
+      <!-- ########################################################################################## -->
+      <!-- ########################################################################################## -->
+      <!-- ########################################################################################## -->
+      <!-- ########################################################################################## -->
+      <!-- Introduction -->
+      
+      <!-- / Introduction -->
+    </div>
+    <!-- / content body -->
+  </div>
+</div>
+<!-- Footer -->
+<div class="wrapper row3">
+  <div id="footer" class="clear">
+    <!-- Section One -->
+    <section class="one_quarter">
+      <h2 class="title">Link Block</h2>
+      <nav>
+        <ul>
+          <li><a href="#">Lorem ipsum dolor sit</a></li>
+          <li><a href="#">Amet consectetur</a></li>
+          <li><a href="#">Praesent vel sem id</a></li>
+          <li><a href="#">Curabitur hendrerit est</a></li>
+          <li class="last"><a href="#">Sed a nulla urna</a></li>
+        </ul>
+      </nav>
+    </section>
+    <!-- Section Two -->
+    <section class="one_quarter">
+      <h2 class="title">Link Block</h2>
+      <nav>
+        <ul>
+          <li><a href="#">Lorem ipsum dolor sit</a></li>
+          <li><a href="#">Amet consectetur</a></li>
+          <li><a href="#">Praesent vel sem id</a></li>
+          <li><a href="#">Curabitur hendrerit est</a></li>
+          <li class="last"><a href="#">Sed a nulla urna</a></li>
+        </ul>
+      </nav>
+    </section>
+    <!-- Section Three -->
+    <section class="one_quarter">
+      <h2 class="title">Link Block</h2>
+      <nav>
+        <ul>
+          <li><a href="#">Lorem ipsum dolor sit</a></li>
+          <li><a href="#">Amet consectetur</a></li>
+          <li><a href="#">Praesent vel sem id</a></li>
+          <li><a href="#">Curabitur hendrerit est</a></li>
+          <li class="last"><a href="#">Sed a nulla urna</a></li>
+        </ul>
+      </nav>
+    </section>
+    <!-- Section Four -->
+    <section class="one_quarter lastbox">
+      <h2 class="title">Link Block</h2>
+      <nav>
+        <ul>
+          <li><a href="#">Lorem ipsum dolor sit</a></li>
+          <li><a href="#">Amet consectetur</a></li>
+          <li><a href="#">Praesent vel sem id</a></li>
+          <li><a href="#">Curabitur hendrerit est</a></li>
+          <li class="last"><a href="#">Sed a nulla urna</a></li>
+        </ul>
+      </nav>
+    </section>
+    <!-- / Section -->
+  </div>
+</div>
+<!-- Copyright -->
+<div class="wrapper row4">
+  <footer id="copyright" class="clear">
+    <p class="fl_left">Copyright &copy; 2012 - All Rights Reserved - <a href="#">Domain Name</a></p>
+    <p class="fl_right">Template by <a href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+  </footer>
+</div>
+</body>
+</html>
