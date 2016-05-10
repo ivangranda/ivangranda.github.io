@@ -10,7 +10,7 @@ var margin = {top: 10, right: 00, bottom: 50, left: 80},
     var xAxis = d3.svg.axis().scale(x)
         .orient("bottom").ticks(8)
         .innerTickSize(-height)
-        .outerTickSize(0);;
+        .outerTickSize(0);
 
     var yAxis = d3.svg.axis()
         .scale(y)

@@ -11,6 +11,11 @@
                 defaultFill: default_fill
             },
             geographyConfig:{
+                popupTemplate: function(geo, data) {
+                return ['<div class="hoverinfo"><strong>',
+                        'Seleccionar ' + geo.properties.name,
+                        '</strong></div>'].join('');},
+
                 highlightOnHover: false,
                 popupOnHover: true,
                 borderColor: '#000000'
@@ -28,12 +33,14 @@
                 datamap.svg.selectAll('.datamaps-subunit').on("contextmenu", function (geography) {
                     var m = {};
                     d3.event.preventDefault();
-                    if (country_2==geography.id) {
+                    if (country_2==geography.id || country==geography.id) {
                         m[country_2]= default_fill;
                         datamap.updateChoropleth(m,{reset:false});
                         country_2 = null;
                     }
                     else{
+
+
                         m[geography.id] = country2_fill;
                         m[country_2]= default_fill;
                         datamap.updateChoropleth(m,{reset:false});

@@ -32,6 +32,7 @@
 #graphs{
     font: 12px Arial;
     }
+
 </style>
 <link rel="stylesheet" href="styles/layout.css" type="text/css">
 <!--[if lt IE 9]><script src="scripts/html5shiv.js"></script><![endif]-->
@@ -88,10 +89,12 @@
 				        .duration(trans)
 				        .attr('d',valueline_1(data_PIB))
 
+
 				    d3.select('#PIB_graph').select('#line_2')
-				        .transition()
+				    .transition()
 				        .duration(trans)
 				        .attr('d',valueline_2(data_PIB))
+				        
 
 				   //extentY = d3.extent(data_inv,function(d){return +d[country]})
 				   	extentY_1 = d3.extent(data_inv,function(d){return +d[country]})
@@ -107,9 +110,10 @@
 				        .attr('d',valueline_1(data_inv))
 
 				    d3.select('#inv_graph').select('#line_2')
-				        .transition()
+				    .transition()
 				        .duration(trans)
 				        .attr('d',valueline_2(data_inv))
+				        
 								
 				    extentY_1 = d3.extent(data_exp_HT,function(d){return +d[country]})
 				    extentY_2 = d3.extent(data_exp_HT,function(d){return +d[country_2]})
