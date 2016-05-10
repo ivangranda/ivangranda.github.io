@@ -25,7 +25,13 @@ var margin = {top: 10, right: 00, bottom: 50, left: 80},
 
     var valueline_2 = d3.svg.line()
         .x(function(d) { return x(d['']); })
-        .y(function(d) { return y(d[country_2]); });
+        .y(function(d) { 
+            if (country_2==null){
+                return y(d[country]);
+            }
+            else{
+            return y(d[country_2]); }
+        })
 
     // Gráfico de PIB
     d3.csv('datos/PIB_mundial_adapt.csv', function(d) {
@@ -50,6 +56,17 @@ var margin = {top: 10, right: 00, bottom: 50, left: 80},
 
         PIB_graph.append("path")
             .attr("class","line")
+            .attr("id","line_2")
+            .attr("d",valueline_2(d))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)})
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)});
+            
+        PIB_graph.append("path")
+            .attr("class","line")
             .attr("id","line_1")
             .attr("d",valueline_1(d))
             .on('mouseover',function(d){
@@ -59,17 +76,6 @@ var margin = {top: 10, right: 00, bottom: 50, left: 80},
                 d3.select(this)
                     .style("stroke-width",2)});
 
-
-        PIB_graph.append("path")
-            .attr("class","line")
-            .attr("id","line_2")
-            .attr("d",valueline_2(d))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)})
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)});
 
 
         // Add the X Axis

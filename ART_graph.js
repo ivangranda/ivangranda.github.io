@@ -16,7 +16,18 @@ d3.csv('datos/articulos_mundial_adapt.csv', function(d) {
             .attr("transform",
                 "translate("+ margin.left + "," + margin.top + ")");
 
-         articulos_graph.append("path")
+        articulos_graph.append("path")
+            .attr("class","line")
+            .attr("id","line_2")
+            .attr("d",valueline_2(d))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)})
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)});
+
+        articulos_graph.append("path")
             .attr("class","line")
             .attr("id","line_1")
             .attr("d",valueline_1(d))
@@ -28,16 +39,7 @@ d3.csv('datos/articulos_mundial_adapt.csv', function(d) {
                     .style("stroke-width",2)});
 
 
-        articulos_graph.append("path")
-            .attr("class","line")
-            .attr("id","line_2")
-            .attr("d",valueline_2(d))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)})
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)});
+        
 
         // Add the X Axis
         articulos_graph.append("g")

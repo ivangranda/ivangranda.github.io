@@ -18,6 +18,17 @@ d3.csv('datos/exportaciones_HHTT_mundial_adapt.csv', function(d) {
 
         exportaciones_graph.append("path")
             .attr("class","line")
+            .attr("id","line_2")
+            .attr("d",valueline_2(d))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)})
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)});
+            
+        exportaciones_graph.append("path")
+            .attr("class","line")
             .attr("id","line_1")
             .attr("d",valueline_1(d))
             .on('mouseover',function(d){
@@ -27,17 +38,6 @@ d3.csv('datos/exportaciones_HHTT_mundial_adapt.csv', function(d) {
                 d3.select(this)
                     .style("stroke-width",2)});
 
-
-        exportaciones_graph.append("path")
-            .attr("class","line")
-            .attr("id","line_2")
-            .attr("d",valueline_2(d))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)})
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)});
 
 
         // Add the X Axis

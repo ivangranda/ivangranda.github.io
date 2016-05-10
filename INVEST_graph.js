@@ -16,6 +16,17 @@
 
         investigadores_graph.append("path")
             .attr("class","line")
+            .attr("id","line_2")
+            .attr("d",valueline_2(d))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)})
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)});
+
+        investigadores_graph.append("path")
+            .attr("class","line")
             .attr("id","line_1")
             .attr("d",valueline_1(d))
             .on('mouseover',function(d){
@@ -26,16 +37,7 @@
                     .style("stroke-width",2)});
 
 
-        investigadores_graph.append("path")
-            .attr("class","line")
-            .attr("id","line_2")
-            .attr("d",valueline_2(d))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)})
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)});
+        
 
         // Add the X Axis
         investigadores_graph.append("g")

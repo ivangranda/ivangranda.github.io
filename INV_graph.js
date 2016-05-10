@@ -17,6 +17,20 @@ d3.csv('datos/inversiones_mundial_adapt.csv', function(d) {
 
         inversiones_graph.append("path")
             .attr("class","line")
+            .attr("id","line_2")
+            .data(data_inv)
+            .attr("d",valueline_2(data_inv))
+            .on('mouseover',function(d){
+                d3.select(this)
+                    .style("stroke-width",5)
+                })
+            .on('mouseout',function(d){
+                d3.select(this)
+                    .style("stroke-width",2)
+            });
+            
+        inversiones_graph.append("path")
+            .attr("class","line")
             .attr("id","line_1")
             .data(data_inv)
             .attr("d",valueline_1(data_inv))
@@ -29,19 +43,7 @@ d3.csv('datos/inversiones_mundial_adapt.csv', function(d) {
                     .style("stroke-width",2)
             });
 
-        inversiones_graph.append("path")
-            .attr("class","line")
-            .attr("id","line_2")
-            .data(data_inv)
-            .attr("d",valueline_2(data_inv))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)
-                })
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)
-            });
+        
 
         // Add the X Axis
         inversiones_graph.append("g")
