@@ -1,5 +1,5 @@
 var data_PIB;
-var margin = {top: 30, right: 20, bottom: 50, left: 80},
+var margin = {top: 10, right: 00, bottom: 50, left: 80},
     width = 300 - margin.left - margin.right,
     height = 200 - margin.top - margin.bottom;
 
@@ -8,11 +8,16 @@ var margin = {top: 30, right: 20, bottom: 50, left: 80},
     var y = d3.scale.linear().range([height, 0]);
 
     var xAxis = d3.svg.axis().scale(x)
-        .orient("bottom").ticks(8);
+        .orient("bottom").ticks(8)
+        .innerTickSize(-height)
+        .outerTickSize(0);;
 
     var yAxis = d3.svg.axis()
         .scale(y)
-        .orient("left").ticks(8);
+        .orient("left").ticks(8)
+        .innerTickSize(-width)
+        .outerTickSize(0);
+        
 
     var valueline_1 = d3.svg.line()
         .x(function(d) { return x(d['']); })
@@ -83,9 +88,10 @@ var margin = {top: 30, right: 20, bottom: 50, left: 80},
             .attr("class", "y axis")
             .call(yAxis);
 
-        PIB_graph.append("text")
+        /*PIB_graph.append("text")
             .attr("y", -margin.top/2)
             .attr("x", 0)
             .attr("dy",".75em")
             //.attr("transform","translate(width/2)")
-            .text("PIB (Millones de US$)")    });
+            .text("PIB (Millones de US$)")    */
+            });
