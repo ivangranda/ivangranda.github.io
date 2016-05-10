@@ -5,8 +5,14 @@
 <title>I+D+i</title>
 <meta charset="iso-8859-1">
 <style>
-path {
+#line_1 {
     stroke: red;
+    stroke-width: 2;
+    fill: none;
+}
+
+#line_2 {
+    stroke: green;
     stroke-width: 2;
     fill: none;
 }
@@ -53,217 +59,105 @@ path {
       <!-- Services -->
       <section id="services" class="clear">
         <article class="one_third" >
-          <figure> <!--img src="images/demo/290x180.gif" width="290" height="180" alt=""-->
-          <svg id="PIB_graph" height="200" width="300"></svg>
-          <script>
-    var data_PIB;
-    var data_inv;
-    var country='ESP';
-    var country_2='';
-    m={};
-    m[country]='red';
-    map.updateChoropleth(m);
-    // Set the dimensions of the canvas / graph
-    var margin = {top: 30, right: 20, bottom: 50, left: 70},
-    width = 300 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
-
-    // Set the ranges
-    var x = d3.scale.linear().range([0, width]);
-    var y = d3.scale.linear().range([height, 0]);
-
-    var xAxis = d3.svg.axis().scale(x)
-        .orient("bottom").ticks(6);
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left").ticks(8);
-
-    var valueline = d3.svg.line()
-        .x(function(d) { return x(d['']); })
-        .y(function(d) { return y(d[country]); });
-
-    // Gráfico de PIB
-    d3.csv('datos/PIB_mundial_adapt.csv', function(d) {
-        data_PIB=d;
+          <figure>
+          	<svg id="PIB_graph" height="200" width="300"></svg>
+          		<script type="text/javascript" src="PIB_graph.js"></script>
+					<script>
+    			function update()
+				{
+				    trans=900;
+				    extentY_1 = d3.extent(data_PIB,function(d){return +d[country]})
+				    extentY_2 = d3.extent(data_PIB,function(d){return +d[country_2]})
+				    y.domain([d3.min([extentY_1[0],extentY_2[0]]),d3.max([extentY_1[1],extentY_2[1]])])
 
 
-        x.domain(d3.extent(data_PIB,function(d){return +d['']}));
-        y.domain(d3.extent(data_PIB,function(d){return +d['ESP']}));
+				    //yAxis.scale(y)
+				    d3.select('#PIB_graph').selectAll('.y.axis')
+				        .transition().duration(trans)
+				        .call(yAxis)
+				    d3.select('#PIB_graph').select('#line_1')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline_1(data_PIB))
 
-        // Adds the svg canvas
-        var PIB_graph = d3.select("#PIB_graph")
-            .append("svg")
-            .attr("x",0)
-            .attr("y",0)
-            .attr("id","PIB_graph")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
+				    d3.select('#PIB_graph').select('#line_2')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline_2(data_PIB))
 
-            .append("g")
-            .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
+				   //extentY = d3.extent(data_inv,function(d){return +d[country]})
+				   	extentY_1 = d3.extent(data_inv,function(d){return +d[country]})
+				    extentY_2 = d3.extent(data_inv,function(d){return +d[country_2]})
+				    y.domain([d3.min([extentY_1[0],extentY_2[0]]),d3.max([extentY_1[1],extentY_2[1]])])
+				 
+				    d3.select('#inv_graph').selectAll('.y.axis')
+				        .transition().duration(500)
+				        .call(yAxis)
+				    d3.select('#inv_graph').select('#line_1')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline_1(data_inv))
 
-        PIB_graph.append("path")
-            .attr("class","line")
-            .attr("d",valueline(d))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)})
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)});
+				    d3.select('#inv_graph').select('#line_2')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline_2(data_inv))
+									/* 
+				    extentY = d3.extent(data_exp_HT,function(d){return +d[country]})
+				    y.domain(extentY)
+				    d3.select('#exportaciones_graph').selectAll('.y.axis')
+				        .transition().duration(500)
+				        .call(yAxis)
+				    d3.select('#exportaciones_graph').select('.line')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline(data_exp_HT))
 
+				    extentY = d3.extent(data_art,function(d){return +d[country]})
+				    y.domain(extentY)
+				    d3.select('#articulos_graph').selectAll('.y.axis')
+				        .transition().duration(500)
+				        .call(yAxis)
+				    d3.select('#articulos_graph').select('.line')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline(data_art))
 
-        // Add the X Axis
-        PIB_graph.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
+				    extentY = d3.extent(data_invest,function(d){return +d[country]})
+				    y.domain(extentY)
+				    d3.select('#investigadores_graph').selectAll('.y.axis')
+				        .transition().duration(500)
+				        .call(yAxis)
+				    d3.select('#investigadores_graph').select('.line')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline(data_invest))
 
-        // Add the Y Axis
-       PIB_graph.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
-
-        PIB_graph.append("text")
-            .attr("y", -margin.top/2)
-            .attr("x", 0)
-            .attr("dy",".75em")
-            //.attr("transform","translate(width/2)")
-            .text("PIB (Millones de US$)")    });
-
-    function update()
-{
-    trans=900;
-    console.log(country)
-    extentY = d3.extent(data_PIB,function(d){return +d[country]})
-    y.domain(extentY)
-
-    //yAxis.scale(y)
-    d3.select('#PIB_graph').selectAll('.y.axis')
-        .transition().duration(trans)
-        .call(yAxis)
-    d3.select('#PIB_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_PIB))
-
-   extentY = d3.extent(data_inv,function(d){return +d[country]})
-    y.domain(extentY)
-    d3.select('#inv_graph').selectAll('.y.axis')
-        .transition().duration(500)
-        .call(yAxis)
-    d3.select('#inv_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_inv))
-/* 
-    extentY = d3.extent(data_exp_HT,function(d){return +d[country]})
-    y.domain(extentY)
-    d3.select('#exportaciones_graph').selectAll('.y.axis')
-        .transition().duration(500)
-        .call(yAxis)
-    d3.select('#exportaciones_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_exp_HT))
-
-    extentY = d3.extent(data_art,function(d){return +d[country]})
-    y.domain(extentY)
-    d3.select('#articulos_graph').selectAll('.y.axis')
-        .transition().duration(500)
-        .call(yAxis)
-    d3.select('#articulos_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_art))
-
-    extentY = d3.extent(data_invest,function(d){return +d[country]})
-    y.domain(extentY)
-    d3.select('#investigadores_graph').selectAll('.y.axis')
-        .transition().duration(500)
-        .call(yAxis)
-    d3.select('#investigadores_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_invest))
-
-    extentY = d3.extent(data_patent,function(d){return +d[country]})
-    y.domain(
-        extentY
-    )
-    console.log(y.domain)
-    d3.select('#patentes_graph').selectAll('.y.axis')
-        .transition().duration(500)
-        .call(yAxis)
-    d3.select('#patentes_graph').select('.line')
-        .transition()
-        .duration(trans)
-        .attr('d',valueline(data_patent))*/
-
-}
-            </script>
+				    extentY = d3.extent(data_patent,function(d){return +d[country]})
+				    y.domain(
+				        extentY
+				    )
+				    console.log(y.domain)
+				    d3.select('#patentes_graph').selectAll('.y.axis')
+				        .transition().duration(500)
+				        .call(yAxis)
+				    d3.select('#patentes_graph').select('.line')
+				        .transition()
+				        .duration(trans)
+				        .attr('d',valueline(data_patent))*/
+				}
+            		</script>
             <figcaption>
-              <h2>PIB</h2>
-              <p>El PIB es uno de los mayores indicadores.</p>
+              <h2>Producto Interior Bruto</h2>
+              <p></p>
               <footer class="more"><a href="#">Read More &raquo;</a></footer>
             </figcaption>
           </figure>
         </article>
         <article class="one_third">
           <figure>
-          <svg id="INV_graph" height="200" width="300"></svg>
-          <script>
-          // Grafico de inversiones en I+D
-    d3.csv('datos/inversiones_mundial_adapt.csv', function(d) {
-        data_inv=d;
-
-        x.domain(d3.extent(data_inv,function(d){return +d['']}));
-        y.domain(d3.extent(data_inv,function(d){return +d['ESP']}));
-
-        var inversiones_graph = d3.select("#INV_graph")
-            .append("svg")
-            .attr("id","inv_graph")
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-
-            .append("g")
-            .attr("transform",
-                "translate("+ margin.left + "," + margin.top + ")");
-
-        inversiones_graph.append("path")
-            .attr("class","line")
-            .data(data_inv)
-            .attr("d",valueline(data_inv))
-            .on('mouseover',function(d){
-                d3.select(this)
-                    .style("stroke-width",5)
-                })
-            .on('mouseout',function(d){
-                d3.select(this)
-                    .style("stroke-width",2)
-            });
-
-        // Add the X Axis
-        inversiones_graph.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(xAxis);
-
-        // Add the Y Axis
-        inversiones_graph.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
-
-
-        inversiones_graph.append("text")
-            .attr("y", -margin.top/2)
-            .attr("x", 0)
-            .attr("dy",".75em")
-            //.attr("transform","translate(width/2)")
-            .text("Inversión en I+D+i (%PIB) ")    });
-			</script>
+          	<svg id="INV_graph" height="200" width="300"></svg>
+          		<script type="text/javascript" src="INV_graph.js"></script>
             <figcaption>
               <h2>Inversión en I+D+i en relación al PIB</h2>
               <p></p>

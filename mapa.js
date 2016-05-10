@@ -1,6 +1,8 @@
-var country = 'ESP';
-    var country_2='';
-        var default_fill='#fff7b7';
+    var country = 'ESP';
+    var country_2=null;
+    var default_fill='#fff7b7';
+    var country_fill='red';
+    var country2_fill='green';
         var map = new Datamap({
             scope:'world',
             projection:'mercator',
@@ -29,19 +31,19 @@ var country = 'ESP';
                     if (country_2==geography.id) {
                         m[country_2]= default_fill;
                         datamap.updateChoropleth(m,{reset:false});
-                        country_2 = '';
+                        country_2 = null;
                     }
                     else{
-                        m[geography.id] = 'green';
+                        m[geography.id] = country2_fill;
                         m[country_2]= default_fill;
                         datamap.updateChoropleth(m,{reset:false});
                         country_2=geography.id;}
-
+                    update();
                 });
                 datamap.svg.selectAll('.datamaps-subunit').on('click',function(geography){
                     var m={};
                     m[country]= default_fill;
-                    m[geography.id] = 'red';
+                    m[geography.id] = country_fill;
 
                     datamap.updateChoropleth(m,{reset:false});
                     country=geography.id;
@@ -50,3 +52,6 @@ var country = 'ESP';
             }
         });
         map.graticule();
+        m={};
+        m[country]=country_fill;
+        map.updateChoropleth(m);
