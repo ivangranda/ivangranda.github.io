@@ -49,7 +49,7 @@
                     update();
                 });
 
-                datamap.svg.selectAll('.datamaps-subunit').on('click',function(geography){
+                datamap.svg.selectAll('.datamaps-subunit').on('mousedown',function(geography){
                     if(country_2==geography.id){
                     country_2=null;
                     }
@@ -61,7 +61,6 @@
                     country=geography.id;
                     update();
                 });
-                datamap.svg.selectAll('.datamaps-subunit').attr('pointer-events',none);
             }
         });
         map.graticule();
