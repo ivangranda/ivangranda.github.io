@@ -32,6 +32,7 @@
                 }
                 datamap.svg.selectAll('.datamaps-subunit').on("contextmenu", function (geography) {
                     var m = {};
+                    
                     d3.event.preventDefault();
                     if (country_2==geography.id || country==geography.id) {
                         m[country_2]= default_fill;
@@ -60,6 +61,7 @@
                     country=geography.id;
                     update();
                 });
+                datamap.svg.selectAll('.datamaps-subunit').attr('pointer-events',none);
             }
         });
         map.graticule();
