@@ -47,7 +47,11 @@
                         country_2=geography.id;}
                     update();
                 });
+
                 datamap.svg.selectAll('.datamaps-subunit').on('click',function(geography){
+                    if(country_2==geography.id){
+                    country_2=null;
+                    }
                     var m={};
                     m[country]= default_fill;
                     m[geography.id] = country_fill;
