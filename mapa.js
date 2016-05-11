@@ -12,13 +12,33 @@
             },
             geographyConfig:{
                 popupTemplate: function(geo, data) {
-                return ['<div class="hoverinfo"><strong>',
-                        'Seleccionar ' + geo.properties.name,
-                        '</strong></div>'].join('');},
+                	if (geo.id==country){
+                		return ['<div class="hoverinfo"><strong>',
+                        '' + geo.properties.name+
+                        '</strong> Pais seleccionado',
+                        '</div>'].join('');}
+                        else{ if(geo.id==country_2){
+                        	return ['<div class="hoverinfo"><strong>',
+                        '' + geo.properties.name+
+                        '</strong> Pais en comparación',
+                        '</div>'].join('');}
+                        else{
+                        	return ['<div class="hoverinfo"><strong>',
+                        '' + geo.properties.name+
+                        '</strong> click izquierdo para seleccionar, click derecho para añadir a comparación',
+                        '</div>'].join('');}
+                        }
+                    
+
+                    },
 
                 highlightOnHover: false,
+                highlightBorderWidth: 3,
+                highlightBorderColor: '#000000',
+                highlightFillColor: default_fill,
                 popupOnHover: true,
                 borderColor: '#000000'
+
             },
             done: function(datamap){
                 datamap.svg.call(d3.behavior.zoom()
@@ -56,7 +76,7 @@
                     var m={};
                     m[country]= default_fill;
                     m[geography.id] = country_fill;
-
+                    
                     datamap.updateChoropleth(m,{reset:false});
                     country=geography.id;
                     update();

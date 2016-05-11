@@ -93,11 +93,4 @@ var margin = {top: 10, right: 00, bottom: 50, left: 80},
        PIB_graph.append("g")
             .attr("class", "y axis")
             .call(yAxis);
-
-        /*PIB_graph.append("text")
-            .attr("y", -margin.top/2)
-            .attr("x", 0)
-            .attr("dy",".75em")
-            //.attr("transform","translate(width/2)")
-            .text("PIB (Millones de US$)")    */
             });
