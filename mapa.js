@@ -83,7 +83,6 @@
                 });
             }
         });
-        map.graticule();
         m={};
         m[country]=country_fill;
         map.updateChoropleth(m);
